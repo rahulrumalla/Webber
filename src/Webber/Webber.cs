@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -7,11 +8,20 @@ using System.Threading.Tasks;
 
 namespace Webber
 {
-    public static class Webber
+    public class Webber
     {
         public static Func<bool> PreInvokeHanadler;
         public static Func<bool> PostInvokeHandler;
-        public static Func<bool> InvokeOnErrorHandler;
+        public static Action<WebberResponse> InvokeOnErrorHandler;
+        public static string AppName;
+
+        /// <summary>
+        /// Set defaults
+        /// </summary>
+        static Webber()
+        {
+            AppName = "Webber";
+        }
 
         public static WebberResponse POST(
                                 string url,
@@ -50,7 +60,8 @@ namespace Webber
                 request.Credentials = credentials;
                 request.Method = methodType;
                 request.ContentType = contentType;
-                request.UserAgent = "Webber";
+                request.UserAgent = AppName;
+                request.KeepAlive = false;
 
                 if (!string.IsNullOrEmpty(data))
                 {
@@ -81,6 +92,8 @@ namespace Webber
             {
                 webberResponse.RawResult = exception.ToString();
                 webberResponse.StatusCode = -1;
+
+                OnError(webberResponse);
             }
             finally
             {
@@ -88,8 +101,24 @@ namespace Webber
 
             return webberResponse;
         }
-    }
 
+        private static void OnError(WebberResponse response)
+        {
+            try
+            {
+                if(InvokeOnErrorHandler != null)
+                {
+                    InvokeOnErrorHandler(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex);
+                Trace.WriteLine(response.RawResult);
+            }
+        }
+    }
+    
     /// <summary>
     /// A generic Webber Response
     /// </summary>
