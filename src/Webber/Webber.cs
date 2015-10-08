@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Webber
 {
@@ -23,34 +23,67 @@ namespace Webber
             AppName = "Webber";
         }
 
-        public static WebberResponse POST(
+        public static WebberResponse Post(
                                 string url,
                                 string data = "",
-                                string contentType = ContentTypes.JSON,
+                                string contentType = ContentTypes.Json,
                                 ICredentials credentials = null,
                                 NameValueCollection customHeaders = null)
         {
-            return Invoke(url, data, contentType, MethodType.POST, credentials, customHeaders);
+            return Invoke(url, data, contentType, MethodType.Post, credentials, customHeaders);
         }
 
-        public static WebberResponse GET(
+        public static WebberResponse<T> Post<T>(
+            string url,
+            string data = "",
+            string contentType = ContentTypes.Json,
+            ICredentials credentials = null,
+            NameValueCollection customHeaders = null)
+        {
+            var postResponse = Post(url, data, contentType, credentials, customHeaders);
+
+            WebberResponse<T> response = new WebberResponse<T>(postResponse);
+
+            if (postResponse.Success)
+            {
+                response.Result = JsonConvert.DeserializeObject<T>(postResponse.RawResult);
+            }
+
+            return response;
+        }
+
+        public static WebberResponse Get(
                         string url,
                         NameValueCollection customHeaders = null)
         {
-            return Invoke(url, null, null, MethodType.GET, null, customHeaders);
+            return Invoke(url, null, null, MethodType.Get, null, customHeaders);
+        }
+
+        public static WebberResponse<T> Get<T>(
+            string url,
+            NameValueCollection customHeaders = null)
+        {
+            var getResponse = Get(url, customHeaders);
+
+            WebberResponse<T> response = new WebberResponse<T>(getResponse);
+
+            if (getResponse.Success)
+            {
+                response.Result = JsonConvert.DeserializeObject<T>(getResponse.RawResult);
+            }
+
+            return response;
         }
 
         public static WebberResponse Invoke(
                                 string url,
                                 string data = "",
-                                string contentType = ContentTypes.JSON,
-                                string methodType = MethodType.POST,
+                                string contentType = ContentTypes.Json,
+                                string methodType = MethodType.Post,
                                 ICredentials credentials = null,
                                 NameValueCollection customHeaders = null)
         {
             var webberResponse = new WebberResponse();
-            HttpWebResponse httpWebResponse = null;
-            Stream responseStream = null;
 
             try
             {
@@ -77,8 +110,8 @@ namespace Webber
 
                 if (customHeaders != null) request.Headers.Add(customHeaders);
 
-                httpWebResponse = (HttpWebResponse)request.GetResponse();
-                responseStream = httpWebResponse.GetResponseStream() ?? new MemoryStream();
+                var httpWebResponse = (HttpWebResponse)request.GetResponse();
+                var responseStream = httpWebResponse.GetResponseStream() ?? new MemoryStream();
 
                 using (var readStream = new StreamReader(responseStream, Encoding.UTF8))
                 {
@@ -86,7 +119,7 @@ namespace Webber
                 }
 
                 webberResponse.StatusCode = (short)httpWebResponse.StatusCode;
-                webberResponse.Success = httpWebResponse.StatusCode == HttpStatusCode.OK;
+                webberResponse.Success = true;
             }
             catch (Exception exception)
             {
@@ -94,9 +127,6 @@ namespace Webber
                 webberResponse.StatusCode = -1;
 
                 OnError(webberResponse);
-            }
-            finally
-            {
             }
 
             return webberResponse;
@@ -106,10 +136,7 @@ namespace Webber
         {
             try
             {
-                if(InvokeOnErrorHandler != null)
-                {
-                    InvokeOnErrorHandler(response);
-                }
+                InvokeOnErrorHandler?.Invoke(response);
             }
             catch (Exception ex)
             {
@@ -129,6 +156,26 @@ namespace Webber
         public string RawResult;
     }
 
+    public class WebberResponse<T> : WebberResponse
+    {
+        public WebberResponse()
+        {
+            
+        }
+
+        public WebberResponse(WebberResponse response)
+        {
+            if (response != null)
+            {
+                StatusCode = response.StatusCode;
+                Success = response.Success;
+                RawResult = response.RawResult;
+            }
+        }
+
+        public T Result;
+    }
+
     /// <summary>
     /// MIME Types for a post request
     /// </summary>
@@ -136,9 +183,9 @@ namespace Webber
     {
         public const string FormEncodedData = "application/x-www-form-urlencoded";
         public const string AtomFeeds = "application/atom+xml";
-        public const string JSON = "application/json";
+        public const string Json = "application/json";
         public const string Javascript = "application/javascript";
-        public const string SOAP = "application/soap+xml";
+        public const string Soap = "application/soap+xml";
         public const string Xml = "text/xml";
         public const string Html = "text/html";
     }
@@ -148,9 +195,9 @@ namespace Webber
     /// </summary>
     public static class MethodType
     {
-        public const string POST = "POST";
-        public const string GET = "GET";
-        public const string PUT = "PUT";
-        public const string PATCH = "PATCH";
+        public const string Post = "POST";
+        public const string Get = "GET";
+        public const string Put = "PUT";
+        public const string Patch = "PATCH";
     }
 }
