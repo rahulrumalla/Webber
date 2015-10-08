@@ -130,7 +130,7 @@ namespace Webber
                 }
                 catch (JsonSerializationException ex)
                 {
-                    Trace.WriteLine(ex.Message);
+                    OnError(response, ex);
 
                     response.Result = new T();
                 }
@@ -143,6 +143,21 @@ namespace Webber
         {
             try
             {
+                InvokeOnErrorHandler?.Invoke(response);
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex);
+                Trace.WriteLine(response.RawResult);
+            }
+        }
+
+        private static void OnError<T>(WebberResponse response, T exception) where T : Exception
+        {
+            try
+            {
+                Trace.WriteLine(exception);
+
                 InvokeOnErrorHandler?.Invoke(response);
             }
             catch (Exception ex)
