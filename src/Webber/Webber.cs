@@ -38,18 +38,11 @@ namespace Webber
             string data = "",
             string contentType = ContentTypes.Json,
             ICredentials credentials = null,
-            NameValueCollection customHeaders = null)
+            NameValueCollection customHeaders = null) where T : new()
         {
-            var postResponse = Post(url, data, contentType, credentials, customHeaders);
+            var webberResponse = Post(url, data, contentType, credentials, customHeaders);
 
-            WebberResponse<T> response = new WebberResponse<T>(postResponse);
-
-            if (postResponse.Success)
-            {
-                response.Result = JsonConvert.DeserializeObject<T>(postResponse.RawResult);
-            }
-
-            return response;
+            return GetDeserializedResponse<T>(webberResponse);
         }
 
         public static WebberResponse Get(
@@ -61,18 +54,11 @@ namespace Webber
 
         public static WebberResponse<T> Get<T>(
             string url,
-            NameValueCollection customHeaders = null)
+            NameValueCollection customHeaders = null) where T : new()
         {
-            var getResponse = Get(url, customHeaders);
+            var webberResponse = Get(url, customHeaders);
 
-            WebberResponse<T> response = new WebberResponse<T>(getResponse);
-
-            if (getResponse.Success)
-            {
-                response.Result = JsonConvert.DeserializeObject<T>(getResponse.RawResult);
-            }
-
-            return response;
+            return GetDeserializedResponse<T>(webberResponse);
         }
 
         public static WebberResponse Invoke(
@@ -130,6 +116,27 @@ namespace Webber
             }
 
             return webberResponse;
+        }
+
+        private static WebberResponse<T> GetDeserializedResponse<T>(WebberResponse webberResponse) where T : new()
+        {
+            WebberResponse<T> response = new WebberResponse<T>(webberResponse);
+
+            if (webberResponse.Success)
+            {
+                try
+                {
+                    response.Result = JsonConvert.DeserializeObject<T>(webberResponse.RawResult);
+                }
+                catch (JsonSerializationException ex)
+                {
+                    Trace.WriteLine(ex.Message);
+
+                    response.Result = new T();
+                }
+            }
+
+            return response;
         }
 
         private static void OnError(WebberResponse response)
