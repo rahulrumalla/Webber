@@ -9,7 +9,7 @@ namespace Webber.Tests
         [TestMethod]
         public void CanGet()
         {
-            string url = "https://api.github.com/zen";
+            string url = "http://jsonplaceholder.typicode.com/posts/1";
 
             WebberResponse webberResponse = Webber.Get(url);
 

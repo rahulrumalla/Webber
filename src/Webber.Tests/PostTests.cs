@@ -19,7 +19,9 @@ namespace Webber.Tests
                 userId = 404
             };
 
-            var webberResponse = Webber.Post<SamplePost>(url, JsonConvert.SerializeObject(data));
+            var request = JsonConvert.SerializeObject(data);
+
+            var webberResponse = Webber.Post<SamplePost>(url, request);
 
             Console.WriteLine(webberResponse.RawResult);
 
