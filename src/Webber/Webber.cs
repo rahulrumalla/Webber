@@ -26,37 +26,41 @@ namespace Webber
         public static WebberResponse Post(
                                 string url,
                                 string data = "",
-                                string contentType = ContentTypes.Json,
+                                string contentType = ContentType.Json,
+                                EncodingType encoding = EncodingType.Utf8,
                                 ICredentials credentials = null,
                                 NameValueCollection customHeaders = null)
         {
-            return Invoke(url, data, contentType, MethodType.Post, credentials, customHeaders);
+            return Invoke(url, data, contentType, MethodType.Post, encoding, credentials, customHeaders);
         }
 
         public static WebberResponse<T> Post<T>(
             string url,
             string data = "",
-            string contentType = ContentTypes.Json,
+            string contentType = ContentType.Json,
+            EncodingType encoding = EncodingType.Utf8,
             ICredentials credentials = null,
             NameValueCollection customHeaders = null) where T : new()
         {
-            var webberResponse = Post(url, data, contentType, credentials, customHeaders);
+            var webberResponse = Post(url, data, contentType, encoding, credentials, customHeaders);
 
             return GetDeserializedResponse<T>(webberResponse);
         }
 
         public static WebberResponse Get(
-                        string url,
-                        NameValueCollection customHeaders = null)
+            string url,
+            EncodingType encoding = EncodingType.Utf8,
+            NameValueCollection customHeaders = null)
         {
-            return Invoke(url, null, null, MethodType.Get, null, customHeaders);
+            return Invoke(url, null, null, MethodType.Get, encoding, null, customHeaders);
         }
 
         public static WebberResponse<T> Get<T>(
             string url,
+            EncodingType encoding = EncodingType.Utf8,
             NameValueCollection customHeaders = null) where T : new()
         {
-            var webberResponse = Get(url, customHeaders);
+            var webberResponse = Get(url, encoding, customHeaders);
 
             return GetDeserializedResponse<T>(webberResponse);
         }
@@ -64,8 +68,9 @@ namespace Webber
         public static WebberResponse Invoke(
                                 string url,
                                 string data = "",
-                                string contentType = ContentTypes.Json,
+                                string contentType = ContentType.Json,
                                 string methodType = MethodType.Post,
+                                EncodingType encodingType = EncodingType.Utf8,
                                 ICredentials credentials = null,
                                 NameValueCollection customHeaders = null)
         {
@@ -88,8 +93,7 @@ namespace Webber
 
                     using (Stream writeStream = request.GetRequestStream())
                     {
-                        var encoding = new UTF8Encoding();
-                        byte[] bytes = encoding.GetBytes(data);
+                        byte[] bytes = GetBytes(encodingType, data);
                         writeStream.Write(bytes, 0, bytes.Length);
                     }
                 }
@@ -116,6 +120,34 @@ namespace Webber
             }
 
             return webberResponse;
+        }
+
+        private static byte[] GetBytes(EncodingType encodingType, string data)
+        {
+            Encoding encoding = GetEncoding(encodingType);
+
+            return encoding.GetBytes(data);
+        }
+
+        private static Encoding GetEncoding(EncodingType encodingType)
+        {
+            switch (encodingType)
+            {
+                case EncodingType.Unicode:
+                    return new UnicodeEncoding();
+
+                case EncodingType.Ascii:
+                    return new ASCIIEncoding();
+
+                case EncodingType.Utf7:
+                    return new UTF7Encoding();
+
+                case EncodingType.Utf32:
+                    return new UTF8Encoding();
+
+                default:
+                    return new UTF8Encoding();
+            }
         }
 
         private static WebberResponse<T> GetDeserializedResponse<T>(WebberResponse webberResponse) where T : new()
@@ -201,7 +233,7 @@ namespace Webber
     /// <summary>
     /// MIME Types for a post request
     /// </summary>
-    public static class ContentTypes
+    public static class ContentType
     {
         public const string FormEncodedData = "application/x-www-form-urlencoded";
         public const string AtomFeeds = "application/atom+xml";
@@ -221,5 +253,17 @@ namespace Webber
         public const string Get = "GET";
         public const string Put = "PUT";
         public const string Patch = "PATCH";
+    }
+
+    /// <summary>
+    /// Encoding type of the request
+    /// </summary>
+    public enum EncodingType
+    {
+        Unicode,
+        Ascii,
+        Utf7,
+        Utf8,
+        Utf32
     }
 }
