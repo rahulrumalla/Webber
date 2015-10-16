@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+    <metadata>
+        <id>Webber</id>
+        <version>1.0.0</version>
+        <title>Webber</title>
+        <authors>xizmark</authors>
+        <owners>xizmark</owners>
+        <licenseUrl>https://github.com/xizmark/Webber/blob/master/LICENSE.md</licenseUrl>
+        <projectUrl>https://github.com/xizmark/Webber</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>A lightweight HTTP Web Request Helper in C# .NET</description>
+        <language>en-US</language>
+        <tags>webclient webrequest helper c# .net http</tags>
+        <dependencies>
+            <group targetFramework=".NETFramework4.0">
+                <dependency id="Newtonsoft.Json" version="7.0.1" />
+            </group>
+        </dependencies>
+        <frameworkAssemblies>
+            <frameworkAssembly assemblyName="System.Net" targetFramework="" />
+        </frameworkAssemblies>
+    </metadata>
+</package>
