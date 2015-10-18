@@ -35,11 +35,11 @@ var webberResponse = Webber.Post<Tests.SamplePost>(
 var webberResponse = Webber.Invoke(
                 url,
                 data,
-                ContentType.Json, -- Specify the request's content-type
-                MethodType.Put, -- Specify the http verb here
-                EncodingType.Utf8, -- Specify the request's encoding type here
-                new NetworkCredential("myUserName", "P@ssW0rd"), -- Add your ICrendential when necessary
-                myCustomerHeaders); -- Add additional headers the reqest
+                ContentType.Json, // Specify the request's content-type
+                MethodType.Put, // Specify the http verb here
+                EncodingType.Utf8, // Specify the request's encoding type here
+                new NetworkCredential("myUserName", "P@ssW0rd"), // Add your ICrendential when necessary
+                myCustomerHeaders); // Add additional headers the reqest
 ```
 
 ###Response Deserialization
