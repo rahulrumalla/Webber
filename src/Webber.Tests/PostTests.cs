@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 
@@ -12,16 +13,16 @@ namespace Webber.Tests
         {
             string url = "http://jsonplaceholder.typicode.com/posts";
 
-            var data = new
+            var request = new
             {
                 title = "Webber TestTitle " + DateTime.Now.Ticks,
                 body = "Webber TestBody " + DateTime.Now.Ticks,
                 userId = 404
             };
 
-            var request = JsonConvert.SerializeObject(data);
+            var data = JsonConvert.SerializeObject(request);
 
-            var webberResponse = Webber.Post<SamplePost>(url, request);
+            var webberResponse = Webber.Post<SamplePost>(url, data);
 
             Console.WriteLine(webberResponse.RawResult);
 

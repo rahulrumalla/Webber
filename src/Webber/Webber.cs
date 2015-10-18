@@ -10,9 +10,14 @@ namespace Webber
 {
     public class Webber
     {
-        public static Func<bool> PreInvokeHanadler;
-        public static Func<bool> PostInvokeHandler;
+        /// <summary>
+        /// Callback that gets invoked if and when an error is occured during the request
+        /// </summary>
         public static Action<WebberResponse> InvokeOnErrorHandler;
+
+        /// <summary>
+        /// Assign the Applciation's name. User Agent of the request is populated witht this field
+        /// </summary>
         public static string AppName;
 
         /// <summary>
@@ -23,6 +28,16 @@ namespace Webber
             AppName = "Webber";
         }
 
+        /// <summary>
+        /// Perform a HTTP POST request
+        /// </summary>
+        /// <param name="url">Url of the request</param>
+        /// <param name="data">Request payload</param>
+        /// <param name="contentType">Content Type of the request. Default is application/json</param>
+        /// <param name="encoding">Encoding Type of the request. Default is UTF-8</param>
+        /// <param name="credentials">ICredential. Default is NULL</param>
+        /// <param name="customHeaders">Additional headers to append to the request. Default is NULL</param>
+        /// <returns>Returns a WebberReponse</returns>
         public static WebberResponse Post(
                                 string url,
                                 string data = "",
@@ -34,6 +49,17 @@ namespace Webber
             return Invoke(url, data, contentType, MethodType.Post, encoding, credentials, customHeaders);
         }
 
+        /// <summary>
+        /// Perform a HTTP POST request
+        /// </summary>
+        /// <typeparam name="T">Type to which the response gets deserialized to</typeparam>
+        /// <param name="url">Url of the request</param>
+        /// <param name="data">Request payload</param>
+        /// <param name="contentType">Content Type of the request. Default is application/json</param>
+        /// <param name="encoding">Encoding Type of the request. Default is UTF-8</param>
+        /// <param name="credentials">ICredential. Default is NULL</param>
+        /// <param name="customHeaders">Additional headers to append to the request. Default is NULL</param>
+        /// <returns>Returns a WebberReponse</returns>
         public static WebberResponse<T> Post<T>(
             string url,
             string data = "",
@@ -47,6 +73,13 @@ namespace Webber
             return GetDeserializedResponse<T>(webberResponse);
         }
 
+        /// <summary>
+        /// Perform a HTTP GET request
+        /// </summary>
+        /// <param name="url">Url of the request</param>
+        /// <param name="encoding">Encoding Type of the request. Default is UTF-8</param>
+        /// <param name="customHeaders">Additional headers to append to the request. Default is NULL</param>
+        /// <returns>Returns a WebberReponse</returns>
         public static WebberResponse Get(
             string url,
             EncodingType encoding = EncodingType.Utf8,
@@ -55,6 +88,14 @@ namespace Webber
             return Invoke(url, null, null, MethodType.Get, encoding, null, customHeaders);
         }
 
+        /// <summary>
+        /// Perform a HTTP GET request
+        /// </summary>
+        /// <typeparam name="T">Type to which the response gets deserialized to</typeparam>
+        /// <param name="url">Url of the request</param>
+        /// <param name="encoding">Encoding Type of the request. Default is UTF-8</param>
+        /// <param name="customHeaders">Additional headers to append to the request. Default is NULL</param>
+        /// <returns>Returns a WebberReponse</returns>
         public static WebberResponse<T> Get<T>(
             string url,
             EncodingType encoding = EncodingType.Utf8,
@@ -65,6 +106,17 @@ namespace Webber
             return GetDeserializedResponse<T>(webberResponse);
         }
 
+        /// <summary>
+        /// Perform a HTTP request
+        /// </summary>
+        /// <param name="url">Url of the request</param>
+        /// <param name="methodType">HTTP Verb type of the reqeust</param>
+        /// <param name="data">Request payload</param>
+        /// <param name="contentType">Content Type of the request. Default is application/json</param>
+        /// <param name="encodingType">Encoding Type of the request. Default is UTF-8</param>
+        /// <param name="credentials">ICredential. Default is NULL</param>
+        /// <param name="customHeaders">Additional headers to append to the request. Default is NULL</param>
+        /// <returns></returns>
         public static WebberResponse Invoke(
                                 string url,
                                 string data = "",
@@ -109,10 +161,13 @@ namespace Webber
                 }
 
                 webberResponse.StatusCode = (short)httpWebResponse.StatusCode;
+                webberResponse.ContentType = httpWebResponse.ContentType;
                 webberResponse.Success = true;
             }
             catch (Exception exception)
             {
+                Trace.WriteLine(exception);
+
                 webberResponse.RawResult = exception.ToString();
                 webberResponse.StatusCode = -1;
 
@@ -152,10 +207,16 @@ namespace Webber
 
         private static WebberResponse<T> GetDeserializedResponse<T>(WebberResponse webberResponse) where T : new()
         {
-            WebberResponse<T> response = new WebberResponse<T>(webberResponse);
+            if(webberResponse.ContentType != ContentType.Json)
+                throw new NotSupportedException($"{webberResponse.ContentType} is not supported. " +
+                                                "Only JSON is supported for auto-deserialization. Use ");
+
+            WebberResponse<T> response = null;
 
             if (webberResponse.Success)
             {
+                response = new WebberResponse<T>(webberResponse);
+
                 try
                 {
                     response.Result = JsonConvert.DeserializeObject<T>(webberResponse.RawResult);
@@ -205,9 +266,25 @@ namespace Webber
     /// </summary>
     public class WebberResponse
     {
+        /// <summary>
+        /// HTTP Status Code of the response
+        /// </summary>
         public short StatusCode;
+
+        /// <summary>
+        /// A flag that indicates that a valid responses was received and that there were no exceptions
+        /// </summary>
         public bool Success;
+
+        /// <summary>
+        /// The raw non-derialized response from the request
+        /// </summary>
         public string RawResult;
+
+        /// <summary>
+        /// ContentType of the response
+        /// </summary>
+        public string ContentType;
     }
 
     public class WebberResponse<T> : WebberResponse
