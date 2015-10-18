@@ -207,7 +207,9 @@ namespace Webber
 
         private static WebberResponse<T> GetDeserializedResponse<T>(WebberResponse webberResponse) where T : new()
         {
-            if(webberResponse.ContentType != ContentType.Json)
+            string contentType = webberResponse.ContentType.Split(';')[0];
+
+            if(contentType?.ToLower() != ContentType.Json)
                 throw new NotSupportedException($"{webberResponse.ContentType} is not supported. " +
                                                 "Only JSON is supported for auto-deserialization. Use ");
 
