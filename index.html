@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Webber by xizmark</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Webber</h1>
+      <h2 class="project-tagline">A lightweight HTTP Web Request Helper in C# .NET</h2>
+      <a href="https://github.com/xizmark/Webber" class="btn">View on GitHub</a>
+      <a href="https://github.com/xizmark/Webber/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/xizmark/Webber/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="webber" class="anchor" href="#webber" aria-hidden="true"><span class="octicon octicon-link"></span></a>Webber</h1>
+
+<h1></h1>
+
+<p><a href="https://www.nuget.org/packages/Webber"><img src="https://img.shields.io/nuget/v/Webber.svg" alt="NuGet Version"></a> 
+<a href="https://www.nuget.org/packages/Webber"><img src="https://img.shields.io/nuget/dt/Webber.svg" alt="NuGet Download Count"></a></p>
+
+<h3>
+<a id="overview" class="anchor" href="#overview" aria-hidden="true"><span class="octicon octicon-link"></span></a>Overview</h3>
+
+<p>Webber is a lightweight, HTTP Web Request Helper / utility written in C#. 
+The idea was to have a very simple and flexible abstraction of doing HTTP requests with minimal lines of code to perform the request. </p>
+
+<h3>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h3>
+
+<h4>
+<a id="get" class="anchor" href="#get" aria-hidden="true"><span class="octicon octicon-link"></span></a>GET</h4>
+
+<p>Performing a GET request is as simple as </p>
+
+<div class="highlight highlight-source-cs"><pre><span class="pl-k">var</span> response = Webber.Get&lt;SamplePost&gt;(<span class="pl-s"><span class="pl-pds">"</span>http://jsonplaceholder.typicode.com/posts/1<span class="pl-pds">"</span></span>);</pre></div>
+
+<h4>
+<a id="post" class="anchor" href="#post" aria-hidden="true"><span class="octicon octicon-link"></span></a>POST</h4>
+
+<p>Shoot a POST request with a wide-range of flexibility</p>
+
+<div class="highlight highlight-source-cs"><pre><span class="pl-c">//Simple POST</span>
+<span class="pl-k">var</span> webberResponse = Webber.Post&lt;SamplePost&gt;(url, data);
+
+<span class="pl-c">//Get flexible control on overriding the default parameters</span>
+<span class="pl-k">var</span> webberResponse = Webber.Post&lt;Tests.SamplePost&gt;(
+                url,
+                data,
+                ContentType.Json,
+                EncodingType.Utf8,
+                <span class="pl-k">new</span> NetworkCredential(<span class="pl-s"><span class="pl-pds">"</span>myUserName<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>P@ssW0rd<span class="pl-pds">"</span></span>),
+                myCustomerHeaders);</pre></div>
+
+<h4>
+<a id="any-http-verb" class="anchor" href="#any-http-verb" aria-hidden="true"><span class="octicon octicon-link"></span></a>Any HTTP Verb</h4>
+
+<div class="highlight highlight-source-cs"><pre><span class="pl-k">var</span> webberResponse = Webber.Invoke(
+                url,
+                data,
+                ContentType.Json, -- Specify the request<span class="pl-s"><span class="pl-pds">'</span>s content-type</span>
+<span class="pl-s">                MethodType.Put, -- Specify the http verb here</span>
+<span class="pl-s">                EncodingType.Utf8, -- Specify the request<span class="pl-pds">'</span></span>s encoding type here
+                <span class="pl-k">new</span> NetworkCredential(<span class="pl-s"><span class="pl-pds">"</span>myUserName<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>P@ssW0rd<span class="pl-pds">"</span></span>), -- Add your ICrendential when necessary
+                myCustomerHeaders); -- Add additional headers the reqest</pre></div>
+
+<h3>
+<a id="response-deserialization" class="anchor" href="#response-deserialization" aria-hidden="true"><span class="octicon octicon-link"></span></a>Response Deserialization</h3>
+
+<p>These web requests' responses can be auto-deserialized from a Json. The library only has 1 dependency, that is Json.Net. Here's a good article on how Json.net is better than the built in .net serializers <a href="http://www.newtonsoft.com/json/help/html/jsonnetvsdotnetserializers.htm">http://www.newtonsoft.com/json/help/html/jsonnetvsdotnetserializers.htm</a></p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/xizmark/Webber">Webber</a> is maintained by <a href="https://github.com/xizmark">xizmark</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
