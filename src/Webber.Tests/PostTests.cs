@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 
@@ -9,9 +8,9 @@ namespace Webber.Tests
     public class PostTests
     {
         [TestMethod]
-        public void CanDeserializeSuccessfulPostResponse()
+        public void Can_Deserialize_Successful_Post_Response()
         {
-            string url = "http://jsonplaceholder.typicode.com/posts";
+            var url = "http://jsonplaceholder.typicode.com/posts";
 
             var request = new
             {
@@ -38,10 +37,10 @@ namespace Webber.Tests
 
         public class SamplePost
         {
-            public int UserId;
+            public string Body;
             public int Id;
             public string Title;
-            public string Body;
+            public int UserId;
         }
     }
 }

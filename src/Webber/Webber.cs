@@ -11,17 +11,17 @@ namespace Webber
     public class Webber
     {
         /// <summary>
-        /// Callback that gets invoked if and when an error is occured during the request
+        ///     Callback that gets invoked if and when an error is occured during the request
         /// </summary>
         public static Action<WebberResponse> InvokeOnErrorHandler;
 
         /// <summary>
-        /// Assign the Applciation's name. User Agent of the request is populated witht this field
+        ///     Assign the Applciation's name. User Agent of the request is populated witht this field
         /// </summary>
         public static string AppName;
 
         /// <summary>
-        /// Set defaults
+        ///     Set defaults
         /// </summary>
         static Webber()
         {
@@ -29,7 +29,7 @@ namespace Webber
         }
 
         /// <summary>
-        /// Perform a HTTP POST request
+        ///     Perform a HTTP POST request
         /// </summary>
         /// <param name="url">Url of the request</param>
         /// <param name="data">Request payload</param>
@@ -39,18 +39,18 @@ namespace Webber
         /// <param name="customHeaders">Additional headers to append to the request. Default is NULL</param>
         /// <returns>Returns a WebberReponse</returns>
         public static WebberResponse Post(
-                                string url,
-                                string data = "",
-                                string contentType = ContentType.Json,
-                                EncodingType encoding = EncodingType.Utf8,
-                                ICredentials credentials = null,
-                                NameValueCollection customHeaders = null)
+            string url,
+            string data = "",
+            string contentType = ContentType.ApplicationJson,
+            EncodingType encoding = EncodingType.Utf8,
+            ICredentials credentials = null,
+            NameValueCollection customHeaders = null)
         {
             return Invoke(url, data, contentType, MethodType.Post, encoding, credentials, customHeaders);
         }
 
         /// <summary>
-        /// Perform a HTTP POST request
+        ///     Perform a HTTP POST request
         /// </summary>
         /// <typeparam name="T">Type to which the response gets deserialized to</typeparam>
         /// <param name="url">Url of the request</param>
@@ -63,7 +63,7 @@ namespace Webber
         public static WebberResponse<T> Post<T>(
             string url,
             string data = "",
-            string contentType = ContentType.Json,
+            string contentType = ContentType.ApplicationJson,
             EncodingType encoding = EncodingType.Utf8,
             ICredentials credentials = null,
             NameValueCollection customHeaders = null) where T : new()
@@ -74,7 +74,7 @@ namespace Webber
         }
 
         /// <summary>
-        /// Perform a HTTP GET request
+        ///     Perform a HTTP GET request
         /// </summary>
         /// <param name="url">Url of the request</param>
         /// <param name="encoding">Encoding Type of the request. Default is UTF-8</param>
@@ -89,7 +89,7 @@ namespace Webber
         }
 
         /// <summary>
-        /// Perform a HTTP GET request
+        ///     Perform a HTTP GET request
         /// </summary>
         /// <typeparam name="T">Type to which the response gets deserialized to</typeparam>
         /// <param name="url">Url of the request</param>
@@ -107,7 +107,7 @@ namespace Webber
         }
 
         /// <summary>
-        /// Perform a HTTP request
+        ///     Perform a HTTP request
         /// </summary>
         /// <param name="url">Url of the request</param>
         /// <param name="methodType">HTTP Verb type of the reqeust</param>
@@ -118,13 +118,13 @@ namespace Webber
         /// <param name="customHeaders">Additional headers to append to the request. Default is NULL</param>
         /// <returns></returns>
         public static WebberResponse Invoke(
-                                string url,
-                                string data = "",
-                                string contentType = ContentType.Json,
-                                string methodType = MethodType.Post,
-                                EncodingType encodingType = EncodingType.Utf8,
-                                ICredentials credentials = null,
-                                NameValueCollection customHeaders = null)
+            string url,
+            string data = "",
+            string contentType = ContentType.ApplicationJson,
+            string methodType = MethodType.Post,
+            EncodingType encodingType = EncodingType.Utf8,
+            ICredentials credentials = null,
+            NameValueCollection customHeaders = null)
         {
             var webberResponse = new WebberResponse();
 
@@ -143,16 +143,16 @@ namespace Webber
                 {
                     request.ContentLength = data.Length;
 
-                    using (Stream writeStream = request.GetRequestStream())
+                    using (var writeStream = request.GetRequestStream())
                     {
-                        byte[] bytes = GetBytes(encodingType, data);
+                        var bytes = GetBytes(encodingType, data);
                         writeStream.Write(bytes, 0, bytes.Length);
                     }
                 }
 
                 if (customHeaders != null) request.Headers.Add(customHeaders);
 
-                var httpWebResponse = (HttpWebResponse)request.GetResponse();
+                var httpWebResponse = (HttpWebResponse) request.GetResponse();
                 var responseStream = httpWebResponse.GetResponseStream() ?? new MemoryStream();
 
                 using (var readStream = new StreamReader(responseStream, Encoding.UTF8))
@@ -160,7 +160,7 @@ namespace Webber
                     webberResponse.RawResult = readStream.ReadToEnd();
                 }
 
-                webberResponse.StatusCode = (short)httpWebResponse.StatusCode;
+                webberResponse.StatusCode = (short) httpWebResponse.StatusCode;
                 webberResponse.ContentType = httpWebResponse.ContentType;
                 webberResponse.Success = true;
             }
@@ -177,14 +177,14 @@ namespace Webber
             return webberResponse;
         }
 
-        private static byte[] GetBytes(EncodingType encodingType, string data)
+        public static byte[] GetBytes(EncodingType encodingType, string data)
         {
-            Encoding encoding = GetEncoding(encodingType);
+            var encoding = GetEncoding(encodingType);
 
             return encoding.GetBytes(data);
         }
 
-        private static Encoding GetEncoding(EncodingType encodingType)
+        public static Encoding GetEncoding(EncodingType encodingType)
         {
             switch (encodingType)
             {
@@ -198,18 +198,18 @@ namespace Webber
                     return new UTF7Encoding();
 
                 case EncodingType.Utf32:
-                    return new UTF8Encoding();
+                    return new UTF32Encoding();
 
                 default:
                     return new UTF8Encoding();
             }
         }
 
-        private static WebberResponse<T> GetDeserializedResponse<T>(WebberResponse webberResponse) where T : new()
+        public static WebberResponse<T> GetDeserializedResponse<T>(WebberResponse webberResponse) where T : new()
         {
-            string contentType = webberResponse.ContentType.Split(';')[0];
+            var contentType = webberResponse.ContentType.Split(';')[0];
 
-            if(contentType?.ToLower() != ContentType.Json)
+            if (contentType?.ToLower() != ContentType.ApplicationJson)
                 throw new NotSupportedException($"{webberResponse.ContentType} is not supported. " +
                                                 "Only JSON is supported for auto-deserialization. Use ");
 
@@ -261,88 +261,5 @@ namespace Webber
                 Trace.WriteLine(response.RawResult);
             }
         }
-    }
-    
-    /// <summary>
-    /// A generic Webber Response
-    /// </summary>
-    public class WebberResponse
-    {
-        /// <summary>
-        /// HTTP Status Code of the response
-        /// </summary>
-        public short StatusCode;
-
-        /// <summary>
-        /// A flag that indicates that a valid responses was received and that there were no exceptions
-        /// </summary>
-        public bool Success;
-
-        /// <summary>
-        /// The raw non-derialized response from the request
-        /// </summary>
-        public string RawResult;
-
-        /// <summary>
-        /// ContentType of the response
-        /// </summary>
-        public string ContentType;
-    }
-
-    public class WebberResponse<T> : WebberResponse
-    {
-        public WebberResponse()
-        {
-            
-        }
-
-        public WebberResponse(WebberResponse response)
-        {
-            if (response != null)
-            {
-                StatusCode = response.StatusCode;
-                Success = response.Success;
-                RawResult = response.RawResult;
-            }
-        }
-
-        public T Result;
-    }
-
-    /// <summary>
-    /// MIME Types for a post request
-    /// </summary>
-    public static class ContentType
-    {
-        public const string FormEncodedData = "application/x-www-form-urlencoded";
-        public const string AtomFeeds = "application/atom+xml";
-        public const string Json = "application/json";
-        public const string Javascript = "application/javascript";
-        public const string Soap = "application/soap+xml";
-        public const string Xml = "text/xml";
-        public const string Html = "text/html";
-    }
-
-    /// <summary>
-    /// Method Types for making a Web Request
-    /// </summary>
-    public static class MethodType
-    {
-        public const string Post = "POST";
-        public const string Get = "GET";
-        public const string Put = "PUT";
-        public const string Patch = "PATCH";
-    }
-
-    /// <summary>
-    /// Encoding type of the request
-    /// </summary>
-    public enum EncodingType
-    {
-        Unicode,
-        Ascii,
-        Utf7,
-        Utf8,
-        Utf32
     }
 }

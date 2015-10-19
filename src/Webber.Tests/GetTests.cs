@@ -7,11 +7,11 @@ namespace Webber.Tests
     public class GetTests
     {
         [TestMethod]
-        public void CanGet()
+        public void Can_Do_Simple_Get()
         {
-            string url = "http://jsonplaceholder.typicode.com/posts/1";
+            var url = "http://jsonplaceholder.typicode.com/posts/1";
 
-            WebberResponse webberResponse = Webber.Get(url);
+            var webberResponse = Webber.Get(url);
 
             Console.WriteLine(webberResponse.RawResult);
 
@@ -19,9 +19,9 @@ namespace Webber.Tests
         }
 
         [TestMethod]
-        public void CanDeserializeSuccessfulGetResponse()
+        public void Can_Deserialize_Successful_Get_Response()
         {
-            string url = "http://jsonplaceholder.typicode.com/posts/1";
+            var url = "http://jsonplaceholder.typicode.com/posts/1";
 
             var webberResponse = Webber.Get<SamplePost>(url);
 
@@ -44,9 +44,9 @@ namespace Webber.Tests
 
     public class SamplePost
     {
-        public int UserId;
+        public string Body;
         public int Id;
         public string Title;
-        public string Body;
+        public int UserId;
     }
 }

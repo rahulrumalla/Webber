@@ -54,6 +54,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="EncodingTypeTests.cs" />
     <Compile Include="GetTests.cs" />
     <Compile Include="PostTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
