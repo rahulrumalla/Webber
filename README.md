@@ -2,6 +2,7 @@
 ========
 <a href="https://www.nuget.org/packages/Webber"><img src="https://img.shields.io/nuget/v/Webber.svg" alt="NuGet Version" /></a> 
 <a href="https://www.nuget.org/packages/Webber"><img src="https://img.shields.io/nuget/dt/Webber.svg" alt="NuGet Download Count" /></a>
+<a href="https://ci.appveyor.com/project/xizmark/webber"><img src="https://ci.appveyor.com/api/projects/status/1qg6o8crtnm8aaix/branch/master?svg=true" alt="NuGet Download Count" /></a>
 
 ### Overview
 Webber is a lightweight, HTTP Web Request Helper / utility written in C#. 
