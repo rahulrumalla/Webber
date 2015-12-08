@@ -1,4 +1,4 @@
-﻿namespace Webber
+﻿namespace Xizmark.Webber
 {
     /// <summary>
     ///     Encoding type of the request

@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Webber.Tests
+namespace Xizmark.Webber.Tests
 {
     [TestClass]
     public class GetTests
@@ -11,7 +11,7 @@ namespace Webber.Tests
         {
             var url = "http://jsonplaceholder.typicode.com/posts/1";
 
-            var webberResponse = Webber.Get(url);
+            var webberResponse = Xizmark.Webber.Webber.Get(url);
 
             Console.WriteLine(webberResponse.RawResult);
 
@@ -23,7 +23,7 @@ namespace Webber.Tests
         {
             var url = "http://jsonplaceholder.typicode.com/posts/1";
 
-            var webberResponse = Webber.Get<SamplePost>(url);
+            var webberResponse = Xizmark.Webber.Webber.Get<SamplePost>(url);
 
             ValidateResponse(webberResponse);
 

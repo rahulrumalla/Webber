@@ -1,4 +1,4 @@
-﻿namespace Webber
+﻿namespace Xizmark.Webber
 {
     /// <summary>
     ///     Method Types for making a Web Request

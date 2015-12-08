@@ -6,7 +6,7 @@ using System.Net;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace Webber
+namespace Xizmark.Webber
 {
     public class Webber
     {

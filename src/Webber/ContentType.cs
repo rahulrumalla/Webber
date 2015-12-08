@@ -1,4 +1,4 @@
-﻿namespace Webber
+﻿namespace Xizmark.Webber
 {
     /// <summary>
     ///     MIME Types for a post request

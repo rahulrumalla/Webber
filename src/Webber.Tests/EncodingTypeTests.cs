@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Webber.Tests
+namespace Xizmark.Webber.Tests
 {
     [TestClass]
     public class EncodingTypeTests
@@ -11,7 +11,7 @@ namespace Webber.Tests
         {
             EncodingType encodingType = EncodingType.Ascii;
 
-            Encoding encoding = Webber.GetEncoding(encodingType);
+            Encoding encoding = Xizmark.Webber.Webber.GetEncoding(encodingType);
 
             Assert.IsTrue(encoding is ASCIIEncoding);
         }
@@ -21,7 +21,7 @@ namespace Webber.Tests
         {
             EncodingType encodingType = EncodingType.Utf7;
 
-            Encoding encoding = Webber.GetEncoding(encodingType);
+            Encoding encoding = Xizmark.Webber.Webber.GetEncoding(encodingType);
 
             Assert.IsTrue(encoding is UTF7Encoding);
         }
@@ -31,7 +31,7 @@ namespace Webber.Tests
         {
             EncodingType encodingType = EncodingType.Utf8;
 
-            Encoding encoding = Webber.GetEncoding(encodingType);
+            Encoding encoding = Xizmark.Webber.Webber.GetEncoding(encodingType);
 
             Assert.IsTrue(encoding is UTF8Encoding);
         }
@@ -41,7 +41,7 @@ namespace Webber.Tests
         {
             EncodingType encodingType = EncodingType.Utf32;
 
-            Encoding encoding = Webber.GetEncoding(encodingType);
+            Encoding encoding = Xizmark.Webber.Webber.GetEncoding(encodingType);
 
             Assert.IsTrue(encoding is UTF32Encoding);
         }
@@ -51,7 +51,7 @@ namespace Webber.Tests
         {
             EncodingType encodingType = EncodingType.Unicode;
 
-            Encoding encoding = Webber.GetEncoding(encodingType);
+            Encoding encoding = Xizmark.Webber.Webber.GetEncoding(encodingType);
 
             Assert.IsTrue(encoding is UnicodeEncoding);
         }

@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 
-namespace Webber.Tests
+namespace Xizmark.Webber.Tests
 {
     [TestClass]
     public class PostTests
@@ -21,7 +21,7 @@ namespace Webber.Tests
 
             var data = JsonConvert.SerializeObject(request);
 
-            var webberResponse = Webber.Post<SamplePost>(url, data);
+            var webberResponse = Xizmark.Webber.Webber.Post<SamplePost>(url, data);
 
             Console.WriteLine(webberResponse.RawResult);
 

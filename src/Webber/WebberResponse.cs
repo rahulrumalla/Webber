@@ -1,4 +1,4 @@
-﻿namespace Webber
+﻿namespace Xizmark.Webber
 {
     /// <summary>
     ///     A generic Webber Response

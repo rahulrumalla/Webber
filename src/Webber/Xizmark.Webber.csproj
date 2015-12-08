@@ -7,8 +7,8 @@
     <ProjectGuid>{56CEF343-8559-46F1-995F-A15221DA739B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Webber</RootNamespace>
-    <AssemblyName>Webber</AssemblyName>
+    <RootNamespace>Xizmark.Webber</RootNamespace>
+    <AssemblyName>Xizmark.Webber</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

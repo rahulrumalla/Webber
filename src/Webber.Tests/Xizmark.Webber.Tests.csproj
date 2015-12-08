@@ -6,8 +6,8 @@
     <ProjectGuid>{5C209F13-ED60-4E10-889D-CCEDE3A2337F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Webber.Tests</RootNamespace>
-    <AssemblyName>Webber.Tests</AssemblyName>
+    <RootNamespace>Xizmark.Webber.Tests</RootNamespace>
+    <AssemblyName>Xizmark.Webber.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -60,9 +60,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Webber\Webber.csproj">
+    <ProjectReference Include="..\Webber\Xizmark.Webber.csproj">
       <Project>{56cef343-8559-46f1-995f-a15221da739b}</Project>
-      <Name>Webber</Name>
+      <Name>Xizmark.Webber</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
