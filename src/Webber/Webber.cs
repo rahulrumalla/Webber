@@ -162,6 +162,7 @@ namespace Xizmark.Webber
 
                 webberResponse.StatusCode = (short) httpWebResponse.StatusCode;
                 webberResponse.ContentType = httpWebResponse.ContentType;
+                webberResponse.Headers = httpWebResponse.Headers;
                 webberResponse.Success = true;
             }
             catch (Exception exception)

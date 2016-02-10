@@ -1,4 +1,6 @@
-﻿namespace Xizmark.Webber
+﻿using System.Collections.Specialized;
+
+namespace Xizmark.Webber
 {
     /// <summary>
     ///     A generic Webber Response
@@ -24,6 +26,11 @@
         ///     A flag that indicates that a valid responses was received and that there were no exceptions
         /// </summary>
         public bool Success;
+
+        /// <summary>
+        ///     Response Headers
+        /// </summary>
+        public NameValueCollection Headers;
     }
 
     public class WebberResponse<T> : WebberResponse
@@ -41,6 +48,7 @@
                 StatusCode = response.StatusCode;
                 Success = response.Success;
                 RawResult = response.RawResult;
+                Headers = response.Headers;
             }
         }
     }
